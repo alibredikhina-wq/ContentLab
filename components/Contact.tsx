@@ -22,7 +22,6 @@ const budgets = [
 export default function Contact() {
   const [projectType, setProjectType] = useState("");
   const [budget, setBudget] = useState("");
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
 
@@ -60,10 +59,34 @@ export default function Contact() {
         }),
       });
 
-      const result = await response.json();
+      const text = await response.text();
 
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || "Ошибка отправки");
+      let result: {
+        success?: boolean;
+        message?: string;
+        error?: string;
+      } = {};
+
+      if (text) {
+        try {
+          result = JSON.parse(text);
+        } catch {
+          console.error("Invalid API response:", text);
+        }
+      }
+
+      console.log("CONTACT RESPONSE:", {
+        status: response.status,
+        ok: response.ok,
+        result,
+      });
+
+      if (!response.ok || result.success !== true) {
+        throw new Error(
+          result.message ||
+            result.error ||
+            `Ошибка сервера: ${response.status}`
+        );
       }
 
       setStatus("success");
