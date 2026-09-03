@@ -1,4 +1,3 @@
-import { NextResponse } from "next";
 import { Resend } from "resend";
 
 export async function POST(request: Request) {
@@ -10,10 +9,10 @@ export async function POST(request: Request) {
     if (!apiKey) {
       console.error("CONTACT API: RESEND_API_KEY отсутствует");
 
-      return NextResponse.json(
+      return Response.json(
         {
           success: false,
-          message: "RESEND_API_KEY не найден в .env.local",
+          message: "RESEND_API_KEY не найден",
         },
         { status: 500 }
       );
@@ -28,7 +27,7 @@ export async function POST(request: Request) {
     const message = String(body.message || "").trim();
 
     if (!name || !contact) {
-      return NextResponse.json(
+      return Response.json(
         {
           success: false,
           message: "Заполните имя и контакт.",
@@ -86,17 +85,9 @@ export async function POST(request: Request) {
     console.log("RESEND RESULT:", emailResult);
 
     if (emailResult.error) {
-      console.error(
-        "RESEND ERROR MESSAGE:",
-        emailResult.error.message
-      );
+      console.error("RESEND ERROR:", emailResult.error);
 
-      console.error(
-        "RESEND ERROR NAME:",
-        emailResult.error.name
-      );
-
-      return NextResponse.json(
+      return Response.json(
         {
           success: false,
           message: "Resend вернул ошибку.",
@@ -111,18 +102,15 @@ export async function POST(request: Request) {
       emailResult.data?.id
     );
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Заявка успешно отправлена.",
-        id: emailResult.data?.id,
-      },
-      { status: 200 }
-    );
+    return Response.json({
+      success: true,
+      message: "Заявка успешно отправлена.",
+      id: emailResult.data?.id,
+    });
   } catch (error) {
     console.error("CONTACT API ERROR:", error);
 
-    return NextResponse.json(
+    return Response.json(
       {
         success: false,
         message: "Произошла ошибка при отправке заявки.",
@@ -135,4 +123,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
