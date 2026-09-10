@@ -21,7 +21,6 @@ export default function Home() {
 
       <MouseGlow />
       <ScrollProgress />
-      <YandexMetrika />
 
       <Header />
       <Hero />
@@ -32,6 +31,7 @@ export default function Home() {
       <Pricing />
       <Contact />
       <Footer />
+      <YandexMetrika />
     </main>
   );
 }
