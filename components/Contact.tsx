@@ -89,12 +89,18 @@ export default function Contact() {
         );
       }
 
+      // Успешная отправка
       setStatus("success");
+
+      // Очищаем форму
       form.reset();
       setProjectType("");
       setBudget("");
     } catch (error) {
+      // Техническая ошибка остается только в консоли
       console.error("Form submit error:", error);
+
+      // Пользователь видит только понятное сообщение
       setStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -360,24 +366,39 @@ export default function Contact() {
                 </motion.div>
               )}
 
+              {/* Успешная отправка */}
               {status === "success" && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="rounded-2xl border border-[#c7ff3d]/30 bg-[#c7ff3d]/5 p-4 text-sm text-[#c7ff3d]"
                 >
-                  Заявка отправлена. Мы свяжемся с вами для обсуждения проекта.
+                  <div className="font-medium">
+                    Заявка успешно отправлена
+                  </div>
+
+                  <div className="mt-1 text-[#c7ff3d]/70">
+                    Спасибо! Мы получили вашу заявку и свяжемся с вами в
+                    ближайшее время, чтобы обсудить проект.
+                  </div>
                 </motion.div>
               )}
 
+              {/* Ошибка отправки */}
               {status === "error" && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="rounded-2xl border border-red-400/20 bg-red-400/5 p-4 text-sm text-red-300"
                 >
-                  Не удалось отправить заявку. Проверьте заполнение полей и
-                  попробуйте ещё раз.
+                  <div className="font-medium">
+                    Не удалось отправить заявку
+                  </div>
+
+                  <div className="mt-1 text-red-300/70">
+                    Попробуйте ещё раз. Если ошибка повторится, свяжитесь с
+                    нами напрямую — мы обязательно ответим.
+                  </div>
                 </motion.div>
               )}
 

@@ -21,11 +21,16 @@ export default function Protection() {
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
+      const key =
+        typeof event.key === "string"
+          ? event.key.toLowerCase()
+          : "";
 
       const blocked =
         (event.ctrlKey && ["c", "u", "s", "p"].includes(key)) ||
-        (event.ctrlKey && event.shiftKey && ["i", "j", "c"].includes(key)) ||
+        (event.ctrlKey &&
+          event.shiftKey &&
+          ["i", "j", "c"].includes(key)) ||
         key === "f12";
 
       if (blocked) {
