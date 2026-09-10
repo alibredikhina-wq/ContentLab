@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import JsonLd from "@/components/JsonLd";
 import Protection from "@/components/Protection";
+import YandexMetrika from "@/components/YandexMetrika";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
 
       <MouseGlow />
       <ScrollProgress />
+      <YandexMetrika />
 
       <Header />
       <Hero />
