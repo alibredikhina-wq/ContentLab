@@ -7,38 +7,27 @@ export default function YandexMetrika() {
     <Script
       id="yandex-metrika"
       strategy="afterInteractive"
-      dangerouslySetInnerHTML={{
-        __html: `
-          (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){
-              (m[i].a=m[i].a||[]).push(arguments)
-            };
-            m[i].l=1*new Date();
+      src="https://mc.yandex.ru/metrika/tag.js?id=112462927"
+      onLoad={() => {
+        const w = window as typeof window & {
+          ym?: (...args: unknown[]) => void;
+        };
 
-            k=e.createElement(t);
-            a=e.getElementsByTagName(t)[0];
+        w.ym =
+          w.ym ||
+          function (...args: unknown[]) {
+            const fn = w.ym as typeof w.ym & { a?: unknown[] };
+            fn.a = fn.a || [];
+            fn.a.push(args);
+          };
 
-            k.async=1;
-            k.src=r;
-
-            a.parentNode.insertBefore(k,a);
-          })(
-            window,
-            document,
-            "script",
-            "https://mc.yandex.ru/metrika/tag.js?id=112462927",
-            "ym"
-          );
-
-          ym(112462927, "init", {
-            ssr: true,
-            webvisor: false,
-            clickmap: true,
-            ecommerce: "dataLayer",
-            accurateTrackBounce: true,
-            trackLinks: true
-          });
-        `,
+        w.ym(112462927, "init", {
+          clickmap: true,
+          trackLinks: true,
+          accurateTrackBounce: true,
+          webvisor: false,
+          ecommerce: "dataLayer",
+        });
       }}
     />
   );
