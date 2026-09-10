@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       return Response.json(
         {
           success: false,
-          message: "RESEND_API_KEY не найден",
+          message: "Сервис отправки писем не настроен.",
         },
         { status: 500 }
       );
@@ -38,74 +38,72 @@ export async function POST(request: Request) {
 
     const resend = new Resend(apiKey);
 
-    const emailResult = await resend.emails.send({
-      from: "ContentLab <onboarding@resend.dev>",
+    const { data, error } = await resend.emails.send({
+      from: "ContentLab <noreply@contentlab-ai.ru>",
       to: [contactEmail],
       subject: `Новая заявка с сайта ContentLab — ${
         projectType || "Проект"
       }`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; color: #111;">
-          <h1>Новая заявка с сайта ContentLab</h1>
+        <div style="font-family:Arial,sans-serif;max-width:650px;margin:0 auto;color:#111">
+
+          <h1 style="margin-bottom:30px;">
+            Новая заявка с сайта ContentLab
+          </h1>
 
           <p>
             <strong>Имя:</strong><br>
-            ${name}
+            ${escapeHtml(name)}
           </p>
 
           <p>
             <strong>Контакт:</strong><br>
-            ${contact}
+            ${escapeHtml(contact)}
           </p>
 
           <p>
             <strong>Тип проекта:</strong><br>
-            ${projectType || "Не указан"}
+            ${escapeHtml(projectType || "Не указан")}
           </p>
 
           <p>
             <strong>Бюджет:</strong><br>
-            ${budget || "Не указан"}
+            ${escapeHtml(budget || "Не указан")}
           </p>
 
           <p>
             <strong>Описание проекта:</strong><br>
-            ${message || "Не указано"}
+            ${escapeHtml(message || "Не указано")}
           </p>
 
-          <hr>
+          <hr style="margin:30px 0;border:none;border-top:1px solid #ddd">
 
-          <p style="color: #777; font-size: 13px;">
+          <p style="color:#777;font-size:13px">
             Заявка отправлена с сайта ContentLab.
           </p>
+
         </div>
       `,
     });
 
-    console.log("RESEND RESULT:", emailResult);
-
-    if (emailResult.error) {
-      console.error("RESEND ERROR:", emailResult.error);
+    if (error) {
+      console.error("RESEND ERROR:", error);
 
       return Response.json(
         {
           success: false,
-          message: "Resend вернул ошибку.",
-          error: emailResult.error.message,
+          message: error.message || "Ошибка отправки письма.",
         },
         { status: 500 }
       );
     }
 
-    console.log(
-      "EMAIL SENT SUCCESSFULLY:",
-      emailResult.data?.id
-    );
+    console.log("EMAIL SENT:", data?.id);
 
     return Response.json({
       success: true,
       message: "Заявка успешно отправлена.",
-      id: emailResult.data?.id,
+      id: data?.id,
     });
   } catch (error) {
     console.error("CONTACT API ERROR:", error);
@@ -113,13 +111,21 @@ export async function POST(request: Request) {
     return Response.json(
       {
         success: false,
-        message: "Произошла ошибка при отправке заявки.",
-        error:
+        message:
           error instanceof Error
             ? error.message
-            : "Неизвестная ошибка",
+            : "Произошла ошибка при отправке заявки.",
       },
       { status: 500 }
     );
   }
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
