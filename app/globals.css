@@ -52,3 +52,64 @@ a {
   user-select: auto;
   -webkit-user-select: auto;
 }
+
+
+/* Lightweight hero background animation */
+
+.hero-glow {
+  pointer-events: none;
+  filter: blur(90px);
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.hero-glow-lime {
+  animation: heroGlowLime 14s ease-in-out infinite;
+}
+
+.hero-glow-purple {
+  animation: heroGlowPurple 17s ease-in-out infinite;
+}
+
+@keyframes heroGlowLime {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-40px, 25px, 0) scale(1.08);
+  }
+}
+
+@keyframes heroGlowPurple {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(35px, -25px, 0) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow-lime,
+  .hero-glow-purple {
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-glow {
+    filter: blur(70px);
+  }
+
+  .hero-glow-lime {
+    animation-duration: 18s;
+  }
+
+  .hero-glow-purple {
+    animation-duration: 20s;
+  }
+}
